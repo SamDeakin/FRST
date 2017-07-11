@@ -63,8 +63,8 @@ int main()
     vk::ApplicationInfo appInfo = vk::ApplicationInfo()
         .setPApplicationName("FRST")
         .setApplicationVersion(1)
-        .setPEngineName("First")
-        .setEngineVersion(1)
+        .setPEngineName("Second")
+        .setEngineVersion(2)
         .setApiVersion(VK_API_VERSION_1_0);
 
     // vk::InstanceCreateInfo is where the programmer specifies the layers and/or extensions that
