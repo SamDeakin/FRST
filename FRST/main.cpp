@@ -15,6 +15,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Note: Modified
  */
 
 /*
@@ -42,6 +44,8 @@ Create and destroy a Vulkan surface on an SDL window.
 #include <iostream>
 #include <vector>
 
+#include "Core.hpp"
+
 vk::SurfaceKHR createVulkanSurface(const vk::Instance& instance, SDL_Window* window);
 std::vector<const char*> getAvailableWSIExtensions();
 
@@ -57,9 +61,9 @@ int main()
     // vk::ApplicationInfo allows the programmer to specifiy some basic information about the
     // program, which can be useful for layers and tools to provide more debug information.
     vk::ApplicationInfo appInfo = vk::ApplicationInfo()
-        .setPApplicationName("Vulkan C++ Windowed Program Template")
+        .setPApplicationName("FRST")
         .setApplicationVersion(1)
-        .setPEngineName("LunarG SDK")
+        .setPEngineName("First")
         .setEngineVersion(1)
         .setApiVersion(VK_API_VERSION_1_0);
 
@@ -87,7 +91,7 @@ int main()
         std::cout << "Could not initialize SDL." << std::endl;
         return 1;
     }
-    SDL_Window* window = SDL_CreateWindow("Vulkan Window", SDL_WINDOWPOS_CENTERED,
+    SDL_Window* window = SDL_CreateWindow("FRST", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
     if(window == NULL) {
         std::cout << "Could not create SDL window." << std::endl;
@@ -105,30 +109,11 @@ int main()
     }
 
     // This is where most initializtion for a program should be performed
-
-    // Poll for user input.
-    bool stillRunning = true;
-    while(stillRunning) {
-
-        SDL_Event event;
-        while(SDL_PollEvent(&event)) {
-
-            switch(event.type) {
-
-            case SDL_QUIT:
-                stillRunning = false;
-                break;
-
-            default:
-                // Do nothing.
-                break;
-            }
-        }
-
-        SDL_Delay(10);
-    }
+	auto game = new FRST::Core(&instance, &surface, window);
+	game->run();
 
     // Clean up.
+	delete game;
     instance.destroySurfaceKHR(surface);
     SDL_DestroyWindow(window);
     SDL_Quit();
