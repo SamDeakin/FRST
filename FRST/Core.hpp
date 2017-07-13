@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <vulkan/vulkan.hpp>
 
-#include <vector>
+#include <deque>
 
 #include "WindowSystem.hpp"
 #include "IOEvent.hpp"
@@ -23,7 +23,7 @@ namespace FRST {
 
 	private:
 		WindowSystem ws;
-		std::vector<IOEvent> events;
+		std::deque<IOEvent> events;
 	};
 
 }

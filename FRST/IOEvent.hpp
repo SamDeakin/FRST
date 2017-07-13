@@ -2,6 +2,9 @@
 
 #include <SDL2/SDL.h>
 
+#include <string>
+#include <unordered_map>
+
 
 namespace FRST {
 	enum class IOEventType;
@@ -9,6 +12,8 @@ namespace FRST {
 	class IOEvent {
 	public:
 		enum class Type;
+		static const std::unordered_map<Type, const std::string> TypeLabels;
+		static const std::string& getTypeString(Type type);
 
 		Type type;
 
@@ -20,26 +25,30 @@ namespace FRST {
 		int x_relative;
 		int y_relative;
 
+		// Field for the control method that sent this event
+		// Either -1 for the default or an sdl joystick index
+		int control_method;
+
 		IOEvent(SDL_Event* event);
 
 	protected:
 		// Used during the constructor to translate the event from an SDL event to an internal type
 		void translateFromSDL(SDL_Event* event);
-		inline void becomeControllerAxis(SDL_ControllerAxisEvent& event);
-		inline void becomeControllerButton(SDL_ControllerButtonEvent& event);
-		inline void becomeKey(SDL_KeyboardEvent& event);
-		inline void becomeMouseMove(SDL_MouseMotionEvent& event);
-		inline void becomeMouseButton(SDL_MouseButtonEvent& event);
-		inline void becomeMouseWheel(SDL_MouseWheelEvent& event);
-		inline void becomeQuit(SDL_QuitEvent& event);
-		inline void becomeWindow(SDL_WindowEvent& event);
-		inline void becomeUnsupported(SDL_Event& event);
+		void becomeControllerAxis(SDL_ControllerAxisEvent& event);
+		void becomeControllerButton(SDL_ControllerButtonEvent& event);
+		void becomeKey(SDL_KeyboardEvent& event);
+		void becomeMouseMove(SDL_MouseMotionEvent& event);
+		void becomeMouseButton(SDL_MouseButtonEvent& event);
+		void becomeMouseWheel(SDL_MouseWheelEvent& event);
+		void becomeQuit(SDL_QuitEvent& event);
+		void becomeWindow(SDL_WindowEvent& event);
+		void becomeUnsupported(SDL_Event& event);
 
 	public:
 		enum class Type {
 			/*
-			* All events are enumerated in this way to provide quick determination of which event occurred
-			*/
+			 * All events are enumerated in this way to provide quick determination of which event occurred
+			 */
 
 			// Mouse Events
 			MS_B1,
@@ -153,6 +162,7 @@ namespace FRST {
 			KB_SHIFT_RIGHT,
 			KB_SLASH_LEFT,
 			KB_SLASH_RIGHT,
+			KB_SPACE,
 			KB_SUPER_LEFT, // Probably not useful in windows
 			KB_SUPER_RIGHT,
 			KB_TAB,
@@ -175,10 +185,16 @@ namespace FRST {
 			CTRL_B_DPAD_RIGHT,
 			CTRL_B_DPAD_UP,
 			// Axis controls
-			CTRL_AXIS_LEFT,
-			CTRL_AXIS_RIGHT,
+			CTRL_AXIS_LEFT_X,
+			CTRL_AXIS_LEFT_Y,
+			CTRL_AXIS_RIGHT_X,
+			CTRL_AXIS_RIGHT_Y,
 			CTRL_AXIS_TRIGGER_LEFT,
 			CTRL_AXIS_TRIGGER_RIGHT,
+			// Adding and removing controllers
+			CTRL_ADDED,
+			CTRL_REMOVED,
+			CTRL_REMAPPED,
 
 			// Semantic Events
 			QUIT,

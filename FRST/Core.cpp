@@ -17,8 +17,12 @@ namespace FRST {
 
 			int num_events = ws.getPendingEvents(events);
 
-			for (int i = total_events; i < total_events + num_events; i++) {
-				if (events[i].type == IOEvent::Type::QUIT) {
+			// TODO These events should be queued as jobs instead of handled here
+			while (!events.empty()) {
+				IOEvent event = events.front();
+				events.pop_front();
+
+				if (event.type == IOEvent::Type::QUIT) {
 					stillRunning = false;
 				}
 			}

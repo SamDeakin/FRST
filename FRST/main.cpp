@@ -51,6 +51,15 @@ std::vector<const char*> getAvailableWSIExtensions();
 
 int main()
 {
+#ifdef _WIN32
+#ifdef _DEBUG
+	// We need this trash in windows because someone at microsoft decided fuck stderr and stdout
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+#endif
+#endif
+
     // Use validation layers if this is a debug build, and use WSI extensions regardless
     std::vector<const char*> extensions = getAvailableWSIExtensions();
     std::vector<const char*> layers;
@@ -87,7 +96,7 @@ int main()
     }
 
     // Create an SDL window that supports Vulkan and OpenGL rendering.
-    if(SDL_Init(SDL_INIT_VIDEO) != 0) {
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
         std::cout << "Could not initialize SDL." << std::endl;
         return 1;
     }
