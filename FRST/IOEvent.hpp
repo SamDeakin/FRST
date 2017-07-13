@@ -11,6 +11,13 @@ namespace FRST {
 	
 	class IOEvent {
 	public:
+		/*
+		 * This is a general purpose class for handling all types of events.
+		 * Many of the fields will be used differently for different types of events.
+		 * Events should be handled this way only for aggregation of events during a frame
+		 * to discern the control state and changes for that frame.
+		 */
+
 		enum class Type;
 		static const std::unordered_map<Type, const std::string> TypeLabels;
 		static const std::string& getTypeString(Type type);
@@ -28,6 +35,9 @@ namespace FRST {
 		// Field for the control method that sent this event
 		// Either -1 for the default or an sdl joystick index
 		int control_method;
+
+		// Pressed or unpressed for buttons
+		bool state;
 
 		IOEvent(SDL_Event* event);
 
@@ -86,7 +96,7 @@ namespace FRST {
 			KB_F9,
 			KB_F10,
 			KB_F11,
-			KB_F12,
+			KB_F12, // Note: Windows-wide global GUI debug hotkey. Hits a breakpoint when debugging.
 			KB_F13,
 			KB_F14,
 			KB_F15,
@@ -140,14 +150,15 @@ namespace FRST {
 			// Everything Else
 			KB_ALT_LEFT,
 			KB_ALT_RIGHT,
+			KB_APOSTROPHE,
 			KB_ARROW_DOWN,
 			KB_ARROW_LEFT,
 			KB_ARROW_RIGHT,
 			KB_ARROW_UP,
 			KB_BACKSPACE,
 			KB_BACKTICK, // `
-			KB_BRACE_LEFT, // [
-			KB_BRACE_RIGHT, // ]
+			KB_BRACKET_LEFT, // [
+			KB_BRACKET_RIGHT, // ]
 			KB_CAPSLOCK,
 			KB_COMMA,
 			KB_CONTEXT_MENU, // That key on the right side beside the win key on some keyboards
@@ -158,6 +169,7 @@ namespace FRST {
 			KB_ESC,
 			KB_MINUS,
 			KB_PERIOD,
+			KB_SEMICOLON,
 			KB_SHIFT_LEFT,
 			KB_SHIFT_RIGHT,
 			KB_SLASH_LEFT,
