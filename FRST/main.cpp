@@ -53,10 +53,15 @@ int main()
 {
 #ifdef _WIN32
 #ifdef _DEBUG
+	// Note this connects to another conditional block at the end of main
 	// We need this trash in windows because someone at microsoft decided fuck stderr and stdout
 	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
+	errno_t err1;
+	FILE* f_stdout;
+	errno_t err2;
+	FILE* f_stderr;
+	err1 = freopen_s(&f_stdout, "CONOUT$", "w", stdout);
+	err2 = freopen_s(&f_stderr, "CONOUT$", "w", stderr);
 #endif
 #endif
 
@@ -127,6 +132,17 @@ int main()
     SDL_DestroyWindow(window);
     SDL_Quit();
     instance.destroy();
+
+#ifdef _WIN32
+#ifdef _DEBUG
+	if (err1 == 0) {
+		fclose(f_stderr);
+	}
+	if (err2 == 0) {
+		fclose(f_stdout);
+	}
+#endif
+#endif
 
     return 0;
 }
