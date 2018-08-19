@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 #include <tuple>
 
-#include "IOState.hpp"
+#include "FRST/IO/IOState.hpp"
 
 
 namespace FRST {

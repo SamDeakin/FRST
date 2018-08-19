@@ -4,7 +4,7 @@
 
 #include <queue>
 
-#include "IOEvent.hpp"
+#include "FRST/IO/IOEvent.hpp"
 
 
 namespace FRST {

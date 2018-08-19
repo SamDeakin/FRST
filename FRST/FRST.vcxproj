@@ -86,7 +86,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(VULKAN_SDK)\Third-Party\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(RootDir)\$(MSBuildProjectDirectoryNoRoot)\include;$(VULKAN_SDK)\Include;$(VULKAN_SDK)\Third-Party\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -104,7 +104,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(VULKAN_SDK)\Third-Party\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(RootDir)\$(MSBuildProjectDirectoryNoRoot)\include;$(VULKAN_SDK)\Include;$(VULKAN_SDK)\Third-Party\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -158,19 +158,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ControllerManager.cpp" />
-    <ClCompile Include="Core.cpp" />
-    <ClCompile Include="IOState.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="IOEvent.cpp" />
-    <ClCompile Include="WindowSystem.cpp" />
+    <ClInclude Include="include\FRST\Core.hpp" />
+    <ClInclude Include="include\FRST\IO\ControllerManager.hpp" />
+    <ClInclude Include="include\FRST\IO\IOEvent.hpp" />
+    <ClInclude Include="include\FRST\IO\IOState.hpp" />
+    <ClInclude Include="include\FRST\IO\WindowSystem.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ControllerManager.hpp" />
-    <ClInclude Include="Core.hpp" />
-    <ClInclude Include="IOEvent.hpp" />
-    <ClInclude Include="IOState.hpp" />
-    <ClInclude Include="WindowSystem.hpp" />
+    <ClCompile Include="src\FRST\Core.cpp" />
+    <ClCompile Include="src\FRST\IO\ControllerManager.cpp" />
+    <ClCompile Include="src\FRST\IO\IOEvent.cpp" />
+    <ClCompile Include="src\FRST\IO\IOState.cpp" />
+    <ClCompile Include="src\FRST\IO\WindowSystem.cpp" />
+    <ClCompile Include="src\FRST\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

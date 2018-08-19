@@ -1,5 +1,5 @@
-#include "Core.hpp"
-#include "IOState.hpp"
+#include "FRST/Core.hpp"
+#include "FRST/IO/IOState.hpp"
 
 namespace FRST {
 	Core::Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window)

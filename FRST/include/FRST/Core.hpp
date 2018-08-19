@@ -3,9 +3,9 @@
 #include <SDL2/SDL.h>
 #include <vulkan/vulkan.hpp>
 
-#include "ControllerManager.hpp"
-#include "IOEvent.hpp"
-#include "WindowSystem.hpp"
+#include "FRST/IO/ControllerManager.hpp"
+#include "FRST/IO/IOEvent.hpp"
+#include "FRST/IO/WindowSystem.hpp"
 
 
 namespace FRST {
