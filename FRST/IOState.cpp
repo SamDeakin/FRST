@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <tuple>
 
 #include "IOState.hpp"
 
@@ -24,15 +25,23 @@ namespace FRST {
 
 			// Loop over the changes to edit the current state to match the changes
 			for (auto it = m_changes.begin(); it != m_changes.end(); it++) {
-				IOEvent* change = *it;
-				auto search = m_currentState.find(change->control);
-				if (search != m_currentState.end()) {
-					// Get rid of this extra event. We only need one of each
-					IOEvent* bad = search->second;
-					search->second = change;
-					delete bad;
+				IOEvent& change = **it;
+				auto search = m_currentState.find(change.control);
+				if (search == m_currentState.end()) {
+					std::tie(search, std::ignore) = m_currentState.insert(change.control, new IOEvent(change));
+
+					change.dx = change.x;
+					change.dy = change.y;
+					search->second->dx = change.dx;
+					search->second->dy = change.dy;
 				} else {
-					m_currentState[change->control] = change;
+					IOEvent& event = *search->second;
+					change.dx = event.x - change.x;
+					change.dy = event.y - change.y;
+					event.dx += change.dx;
+					event.dy += change.dy;
+					event.x = change.x;
+					event.y = change.y;
 				}
 			}
 		}
@@ -41,7 +50,10 @@ namespace FRST {
 			for (auto it = m_currentState.begin(); it != m_currentState.end(); it++) {
 				delete it->second;
 			}
-			// Note we don't delete from m_changes because they will be duplicated in m_currentState
+			
+			for (auto it = m_changes.begin(); it != m_changes.end(); it++) {
+				delete *it;
+			}
 		}
 
 		const IOEvent* IOState::getState(IOEvent::Control ctrl) {
