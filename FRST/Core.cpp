@@ -1,5 +1,5 @@
 #include "Core.hpp"
-
+#include "IOState.hpp"
 
 namespace FRST {
 	Core::Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window)
@@ -17,6 +17,8 @@ namespace FRST {
 		// Queues for handling events
 		std::queue<IO::IOEvent*> gameEvents;
 		std::queue<IO::IOEvent*> immediateEvents;
+
+		IO::IOState* lastFrameState = new IO::IOState();
 
 		while (m_running) {
 
@@ -38,17 +40,18 @@ namespace FRST {
 				delete event;
 			}
 
-			// Handle game events
-			while (m_running && !gameEvents.empty()) {
+			std::vector<IO::IOEvent*> packagedEvents;
+			packagedEvents.reserve(gameEvents.size());
+			while (!gameEvents.empty()) {
 				IO::IOEvent* event = gameEvents.front();
 				gameEvents.pop();
-
-				// TODO Create an IOState object out of these.
-
-				delete event;
+				packagedEvents.push_back(event);
 			}
-
 			total_events += num_events;
+
+			IO::IOState* frameState = new IO::IOState(*lastFrameState, packagedEvents);
+			delete lastFrameState; // TODO This is a temporary clean up while we do nothing with the state right now.
+			lastFrameState = frameState;
 
 			SDL_Delay(10);
 		}

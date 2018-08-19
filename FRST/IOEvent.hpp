@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 
+#include <functional>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -24,6 +25,7 @@ namespace FRST {
 			typedef int Controller;
 
 			enum Type;
+
 			static const std::unordered_map<Type, const std::string> TypeLabels;
 			static const std::string& getTypeString(Type type);
 
@@ -34,6 +36,10 @@ namespace FRST {
 				// Field for the control method that sent this event
 				// Either -1 for the default or an sdl joystick index
 				Controller controller;
+
+				inline bool operator==(const Control& other) const {
+					return other.type == type && other.controller == controller;
+				}
 			} control;
 
 			// Only valid for movement type events
@@ -58,7 +64,10 @@ namespace FRST {
 			// over to the next frame.
 			// Essentially if this event is a transition to a default state (or already
 			// sitting at the default state) then this will return false
-			inline bool shouldMoveToNextFrame() const;
+			inline bool shouldMoveToNextFrame() const {
+				// Note we don't check dx and dy
+				return !active && x == 0 && y == 0;
+			}
 		protected:
 			// Used during the constructor to translate the event from an SDL event to an internal type
 			void translateFromSDL(SDL_Event* event);
@@ -244,6 +253,8 @@ namespace FRST {
 				WINDOW_MINIMIZED = WINDOW_START,
 				WINDOW_MAXIMIZED,
 				WINDOW_RESTORED,
+				WINDOW_RESIZED,
+				WINDOW_FULLSCREEN,
 				MOUSE_FOCUS_GAINED,
 				MOUSE_FOCUS_LOST,
 				KEYBOARD_FOCUS_GAINED,
@@ -252,9 +263,6 @@ namespace FRST {
 				WINDOW_MOVED,
 				WINDOW_CLOSED, // We have one window so we should never get this event
 				// Unsupported
-				WINDOW_RESIZED,
-				WINDOW_MINIMIZED,
-				WINDOW_FULLSCREEN,
 				WINDOW_END,
 
 				QUIT = WINDOW_END,
@@ -264,14 +272,32 @@ namespace FRST {
 				ENUM_END = UNSUPPORTED,
 			};
 
-			inline bool isMouseMotionEvent() { control.type == MS_MOVE; }
-			inline bool isMouseButtonEvent() { control.type >= MS_START && control.type < MS_END; }
-			inline bool isMouseWheelEvent() { control.type == MS_WHEEL; }
-			inline bool IS_KEYBOARD_EVENT() { control.type >= KB_START && control.type < KB_END; }
-			inline bool isControllerButtonEvent() { control.type >= CTRL_BUTTONS_START && control.type < CTRL_BUTTONS_END; }
-			inline bool isControllerAxisEvent() { control.type >= CTRL_AXIS_START && control.type < CTRL_AXIS_END; }
-			inline bool isControllerModificationEvent() { control.type >= CTRL_MODIFICATION_START && control.type < CTRL_MODIFICATION_END; }
-			inline bool isWindowEvent() { control.type >= WINDOW_START && control.type < WINDOW_END; }
+			inline bool isMouseMotionEvent() { return control.type == MS_MOVE; }
+			inline bool isMouseButtonEvent() { return control.type >= MS_START && control.type < MS_END; }
+			inline bool isMouseWheelEvent() { return control.type == MS_WHEEL; }
+			inline bool IS_KEYBOARD_EVENT() { return control.type >= KB_START && control.type < KB_END; }
+			inline bool isControllerButtonEvent() { return control.type >= CTRL_BUTTONS_START && control.type < CTRL_BUTTONS_END; }
+			inline bool isControllerAxisEvent() { return control.type >= CTRL_AXIS_START && control.type < CTRL_AXIS_END; }
+			inline bool isControllerModificationEvent() { return control.type >= CTRL_MODIFICATION_START && control.type < CTRL_MODIFICATION_END; }
+			inline bool isWindowEvent() { return control.type >= WINDOW_START && control.type < WINDOW_END; }
 		};
 	}
+}
+
+
+// This is such a terrible interface for this, but short of passing an extra
+// template parameter to literally every hashtable that uses Control this is the
+// best we can get.
+namespace std {
+	template<>
+	struct hash<FRST::IO::IOEvent::Control> {
+		size_t operator()(const FRST::IO::IOEvent::Control& ctrl) const {
+			// We should reevaluate how well this actually performs at some point in
+			// the future. This is probably good enough for now, and anything more is
+			// a risk that I do something I don't know will cause aliasing or some other
+			// issue. XORing them together is a safe first guess.
+			return hash<FRST::IO::IOEvent::Type>()(ctrl.type)
+				^ hash< FRST::IO::IOEvent::Controller>()(ctrl.controller);
+		}
+	};
 }

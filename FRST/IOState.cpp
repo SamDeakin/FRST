@@ -28,7 +28,8 @@ namespace FRST {
 				IOEvent& change = **it;
 				auto search = m_currentState.find(change.control);
 				if (search == m_currentState.end()) {
-					std::tie(search, std::ignore) = m_currentState.insert(change.control, new IOEvent(change));
+					std::tie(search, std::ignore) = m_currentState.insert(
+						std::make_pair(change.control, new IOEvent(change)));
 
 					change.dx = change.x;
 					change.dy = change.y;

@@ -25,7 +25,8 @@ namespace FRST {
 					newEvent = nullptr;
 				} else if (
 					newEvent->isControllerModificationEvent() ||
-					newEvent->isWindowEvent()) {
+					newEvent->isWindowEvent() ||
+					newEvent->control.type == IOEvent::Type::QUIT) {
 					// This is an immediate event
 					immediateEvents.push(newEvent);
 					newEvent = nullptr;

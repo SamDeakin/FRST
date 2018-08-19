@@ -24,18 +24,13 @@ namespace FRST {
 			, active(false) {
 		}
 
-		IOEvent::IOEvent(const IOEvent& const other)
+		IOEvent::IOEvent(const IOEvent& other)
 			: control(other.control)
 			, x(other.x)
 			, y(other.y)
 			, dx(0) // We don't copy change because it is no longer valid for the next frame
 			, dy(0)
 			, active(other.active) {
-		}
-
-		bool IOEvent::shouldMoveToNextFrame() const {
-			// Note we don't check dx and dy
-			return !active && x == 0 && y == 0;
 		}
 
 		void IOEvent::translateFromSDL(SDL_Event* event) {
@@ -92,7 +87,9 @@ namespace FRST {
 			/*
 			 * This template class is used to map SDL enums to IOEvent::Type enums with a default value
 			 */
-			TypeMapWithDefault(std::initializer_list<value_type> il) : std::unordered_map<T, IOEvent::Type>(il) {
+			TypeMapWithDefault(
+				std::initializer_list<typename std::unordered_map<T, IOEvent::Type>::value_type> il)
+				: std::unordered_map<T, IOEvent::Type>(il) {
 				// Empty, just here to support list-initialization of the super
 			}
 
@@ -297,6 +294,9 @@ namespace FRST {
 			// as it's mapped, instead of as it physically is on a QWERTY keyboard
 			control.type = keyToTypeMap.getType(event.keysym.sym);
 			if (control.type == IOEvent::Type::UNSUPPORTED) {
+#ifdef _DEBUG
+				std::cout << "Unsupported key: " << event.keysym.sym << " " << event.keysym.scancode << " " << event.keysym.mod << " " << event.keysym.unused << std::endl;
+#endif
 				return;
 			}
 
@@ -420,7 +420,8 @@ namespace FRST {
 			auto it = TypeLabels.find(type);
 
 			if (it == TypeLabels.end()) {
-				return "[Undefined]";
+				it = TypeLabels.find(Type::UNSUPPORTED);
+				return it->second;
 			}
 			else {
 				return it->second;
