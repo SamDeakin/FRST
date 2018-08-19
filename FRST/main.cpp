@@ -123,7 +123,7 @@ int main() {
 
     // This is where most initializtion for a program should be performed
 	auto game = new FRST::Core(&instance, &surface, window);
-	game->run();
+	game->run(); // Run returning means the game has closed
 
     // Clean up.
 	delete game;

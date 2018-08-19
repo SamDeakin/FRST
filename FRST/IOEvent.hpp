@@ -7,14 +7,6 @@
 #include <unordered_map>
 
 
-#define IS_MOUSE_MOTION_EVENT(event) (event == MS_MOVE)
-#define IS_MOUSE_BUTTON_EVENT(event) (event >= MS_START && event < MS_END)
-#define IS_MOUSE_WHEEL_EVENT(event) (event == MS_WHEEL)
-#define IS_KEYBOARD_EVENT(event) (event >= KB_START && event < KB_END)
-#define IS_CONTROLLER_BUTTON_EVENT(event) (event >= CTRL_BUTTONS_START && event < CTRL_BUTTONS_END)
-#define IS_CONTROLLER_AXIS_EVENT(event) (event >= CTRL_AXIS_START && event < CTRL_AXIS_END)
-
-
 namespace FRST {
 	namespace IO {
 		class IOEvent {
@@ -72,6 +64,7 @@ namespace FRST {
 			void translateFromSDL(SDL_Event* event);
 			void becomeControllerAxis(SDL_ControllerAxisEvent& event);
 			void becomeControllerButton(SDL_ControllerButtonEvent& event);
+			void becomeControllerModification(SDL_ControllerDeviceEvent& event);
 			void becomeKey(SDL_KeyboardEvent& event);
 			void becomeMouseMove(SDL_MouseMotionEvent& event);
 			void becomeMouseButton(SDL_MouseButtonEvent& event);
@@ -240,33 +233,45 @@ namespace FRST {
 				CTRL_AXIS_TRIGGER_RIGHT,
 				CTRL_AXIS_END,
 				// Adding and removing controllers
-				CTRL_ADDED = CTRL_AXIS_END,
+				CTRL_MODIFICATION_START = CTRL_AXIS_END,
+				CTRL_ADDED = CTRL_MODIFICATION_START,
 				CTRL_REMOVED,
 				CTRL_REMAPPED,
+				CTRL_MODIFICATION_END,
 
-				// Semantic Events
-				SEMANTIC_START,
-				QUIT = SEMANTIC_START,
-				MINIMIZED,
-				MAXIMIZED,
-				RESTORED,
+				// Window Events
+				WINDOW_START = CTRL_MODIFICATION_END,
+				WINDOW_MINIMIZED = WINDOW_START,
+				WINDOW_MAXIMIZED,
+				WINDOW_RESTORED,
 				MOUSE_FOCUS_GAINED,
 				MOUSE_FOCUS_LOST,
 				KEYBOARD_FOCUS_GAINED,
 				KEYBOARD_FOCUS_LOST,
 				// Do Nothing
-				MOVE,
-				CLOSE, // We have one window so we should never get this event
+				WINDOW_MOVED,
+				WINDOW_CLOSED, // We have one window so we should never get this event
 				// Unsupported
-				RESIZE,
-				MINIMIZE,
-				FULLSCREEN,
-				UNSUPPORTED,
-				SEMANTIC_END,
+				WINDOW_RESIZED,
+				WINDOW_MINIMIZED,
+				WINDOW_FULLSCREEN,
+				WINDOW_END,
 
-				// For iteration
-				ENUM_END = SEMANTIC_END,
+				QUIT = WINDOW_END,
+				UNSUPPORTED,
+
+				// For iteration. Don't iterate through unsupported
+				ENUM_END = UNSUPPORTED,
 			};
+
+			inline bool isMouseMotionEvent() { control.type == MS_MOVE; }
+			inline bool isMouseButtonEvent() { control.type >= MS_START && control.type < MS_END; }
+			inline bool isMouseWheelEvent() { control.type == MS_WHEEL; }
+			inline bool IS_KEYBOARD_EVENT() { control.type >= KB_START && control.type < KB_END; }
+			inline bool isControllerButtonEvent() { control.type >= CTRL_BUTTONS_START && control.type < CTRL_BUTTONS_END; }
+			inline bool isControllerAxisEvent() { control.type >= CTRL_AXIS_START && control.type < CTRL_AXIS_END; }
+			inline bool isControllerModificationEvent() { control.type >= CTRL_MODIFICATION_START && control.type < CTRL_MODIFICATION_END; }
+			inline bool isWindowEvent() { control.type >= WINDOW_START && control.type < WINDOW_END; }
 		};
 	}
 }

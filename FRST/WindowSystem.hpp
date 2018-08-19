@@ -2,19 +2,13 @@
 
 #include <SDL2/SDL.h>
 
-#include <deque>
-#include <unordered_map>
+#include <queue>
 
 #include "IOEvent.hpp"
 
 
 namespace FRST {
 	namespace IO {
-		typedef int GameControllerHandle; // TODO This is not the right place for this
-		// TODO Should redo this entire strategy to include a wrapper that
-		// discretizes each control method and forces the system to include a "player" index
-		// for each control query.
-
 		class WindowSystem {
 		public:
 			WindowSystem(SDL_Window* window);
@@ -22,19 +16,24 @@ namespace FRST {
 
 			// EventLoop functions
 			/*
-			 * Get all pending events by appending them to the provided vector
-			 * Can be size 0
-			 * Returns the number of events added
+			 * Get all pending events by appending them to the provided queues
+			 * Splits these events into game events and immediate events.
+			 * Generally an immediate event is one that must be handled immediately,
+			 * like a controller being disconnected or the window being resized.
+			 *
+			 * returns game events in gameEvents
+			 * returns immediate events in immediateEvents
+			 * returns the number of game events
 			 */
-			int getPendingEvents(std::deque<IOEvent> &events);
+			int getPendingEvents(
+				std::queue<IOEvent*> &gameEvents,
+				std::queue<IOEvent*> &immediateEvents);
 
+			// These are not handled directly inside getPendingEvents to provide the caller
+			// the chance to schedule their handling at a potentially later time.
+			void handleWindowEvent(IOEvent* event);
 		private:
-			void initControllers();
-
 			SDL_Window* window;
-
-			// Saved joystick id to controller mappings
-			std::unordered_map<GameControllerHandle, SDL_GameController*> controllers;
 		};
 	}
 }

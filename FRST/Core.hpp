@@ -3,10 +3,9 @@
 #include <SDL2/SDL.h>
 #include <vulkan/vulkan.hpp>
 
-#include <deque>
-
-#include "WindowSystem.hpp"
+#include "ControllerManager.hpp"
 #include "IOEvent.hpp"
+#include "WindowSystem.hpp"
 
 
 namespace FRST {
@@ -21,9 +20,18 @@ namespace FRST {
 		// Run the game
 		void run();
 
+		// Quit the game
+		// This tells the gameloop to quit. It may actually take some time (up to a full frame) to actually quit the game.
+		// The implementation will preferrably be decoupled from the job scheduling system
+		// to still allow the game to quit if it deadlocks.
+		void quit();
+
 	private:
-		IO::WindowSystem ws;
-		std::deque<IO::IOEvent> events;
+		IO::WindowSystem m_ws;
+		IO::ControllerManager m_controllerManager;
+
+		// Whether the game is currently running
+		bool m_running;
 	};
 
 }

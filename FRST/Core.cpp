@@ -2,34 +2,59 @@
 
 
 namespace FRST {
-	Core::Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window) :
-		ws(window) {
+	Core::Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window)
+		: m_ws(window)
+		, m_controllerManager() {
 	}
 
 	Core::~Core() {
 	}
 	
 	void Core::run() {
-		// Poll for user input.
-		bool stillRunning = true;
+		m_running = true;
 		int total_events = 0;
-		while (stillRunning) {
 
-			int num_events = ws.getPendingEvents(events);
+		// Queues for handling events
+		std::queue<IO::IOEvent*> gameEvents;
+		std::queue<IO::IOEvent*> immediateEvents;
 
-			// TODO These events should be queued as jobs instead of handled here
-			while (!events.empty()) {
-				IOEvent event = events.front();
-				events.pop_front();
+		while (m_running) {
 
-				if (event.type == IOEvent::Type::QUIT) {
-					stillRunning = false;
+			int num_events = m_ws.getPendingEvents(gameEvents, immediateEvents);
+
+			// Handle immediate events
+			while (!immediateEvents.empty()) {
+				IO::IOEvent* event = immediateEvents.front();
+				immediateEvents.pop();
+
+				if (event->isControllerModificationEvent()) {
+					m_controllerManager.handleControllerEvent(event);
+				} else if (event->isWindowEvent()) {
+					m_ws.handleWindowEvent(event);
+				} else if (event->control.type == IO::IOEvent::Type::QUIT) {
+					// We quit here on this thread to hopefully exit well when the user asks us to.
+					quit();
 				}
+				delete event;
+			}
+
+			// Handle game events
+			while (m_running && !gameEvents.empty()) {
+				IO::IOEvent* event = gameEvents.front();
+				gameEvents.pop();
+
+				// TODO Create an IOState object out of these.
+
+				delete event;
 			}
 
 			total_events += num_events;
 
 			SDL_Delay(10);
 		}
+	}
+
+	void Core::quit() {
+		m_running = false;
 	}
 } 

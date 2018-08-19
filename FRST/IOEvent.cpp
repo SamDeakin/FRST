@@ -49,6 +49,12 @@ namespace FRST {
 				becomeControllerButton(event->cbutton);
 				break;
 
+			case SDL_CONTROLLERDEVICEADDED:
+			case SDL_CONTROLLERDEVICEREMAPPED:
+			case SDL_CONTROLLERDEVICEREMOVED:
+				becomeControllerModification(event->cdevice);
+				break;
+
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
 				becomeKey(event->key);
@@ -165,6 +171,22 @@ namespace FRST {
 #ifdef _DEBUG
 			std::cout << "Controller Button: " << getTypeString(control.type) << " " << active << std::endl;
 #endif
+		}
+
+		void IOEvent::becomeControllerModification(SDL_ControllerDeviceEvent& event) {
+			switch (event.type) {
+			case SDL_CONTROLLERDEVICEADDED:
+				control.type = Type::CTRL_ADDED;
+				break;
+			case SDL_CONTROLLERDEVICEREMAPPED:
+				control.type = Type::CTRL_REMAPPED;
+				break;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				control.type = Type::CTRL_REMOVED;
+				break;
+			}
+
+			control.controller = event.which;
 		}
 
 		static const TypeMapWithDefault<SDL_Keycode> keyToTypeMap = {
@@ -342,7 +364,49 @@ namespace FRST {
 		}
 
 		void IOEvent::becomeWindow(SDL_WindowEvent& event) {
-			// TODO
+			switch (event.type) {
+			case SDL_WINDOWEVENT_MOVED:
+				control.type = Type::WINDOW_MOVED;
+				break;
+			case SDL_WINDOWEVENT_RESIZED:
+			// case SDL_WINDOWEVENT_SIZE_CHANGED:
+				control.type = Type::WINDOW_RESIZED;
+				break;
+			case SDL_WINDOWEVENT_MINIMIZED:
+				control.type = Type::WINDOW_MINIMIZED;
+				break;
+			case SDL_WINDOWEVENT_MAXIMIZED:
+				control.type = Type::WINDOW_MAXIMIZED;
+				break;
+			case SDL_WINDOWEVENT_RESTORED:
+				control.type = Type::WINDOW_RESTORED;
+				break;
+			case SDL_WINDOWEVENT_ENTER:
+				control.type = Type::MOUSE_FOCUS_GAINED;
+				break;
+			case SDL_WINDOWEVENT_LEAVE:
+				control.type = Type::MOUSE_FOCUS_LOST;
+				break;
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+				control.type = Type::KEYBOARD_FOCUS_GAINED;
+				break;
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+				control.type = Type::KEYBOARD_FOCUS_LOST;
+				break;
+			case SDL_WINDOWEVENT_CLOSE:
+				control.type = Type::WINDOW_CLOSED;
+				break;
+			case SDL_WINDOWEVENT_SHOWN:
+			case SDL_WINDOWEVENT_HIDDEN:
+			case SDL_WINDOWEVENT_EXPOSED:
+			case SDL_WINDOWEVENT_TAKE_FOCUS:
+			case SDL_WINDOWEVENT_HIT_TEST:
+			default:
+				control.type = Type::UNSUPPORTED;
+			}
+
+			x = event.data1;
+			y = event.data2;
 		}
 
 		void IOEvent::becomeUnsupported(SDL_Event& event) {
@@ -502,19 +566,19 @@ namespace FRST {
 			{ IOEvent::Type::CTRL_REMAPPED, "Controller Remapped" },
 
 			{ IOEvent::Type::QUIT, "Quit Application" },
-			{ IOEvent::Type::MINIMIZED, "Window Minimized" },
-			{ IOEvent::Type::MAXIMIZED, "Window Maximized" },
-			{ IOEvent::Type::RESTORED, "Window Restored" },
+			{ IOEvent::Type::WINDOW_MINIMIZED, "Window Minimized" },
+			{ IOEvent::Type::WINDOW_MAXIMIZED, "Window Maximized" },
+			{ IOEvent::Type::WINDOW_RESTORED, "Window Restored" },
 			{ IOEvent::Type::MOUSE_FOCUS_GAINED, "Mouse Focus Gained" },
 			{ IOEvent::Type::MOUSE_FOCUS_LOST, "Mouse Focus Lost" },
 			{ IOEvent::Type::KEYBOARD_FOCUS_GAINED, "Keyboard Focus Gained" },
 			{ IOEvent::Type::KEYBOARD_FOCUS_LOST, "Keyboard Focus Lost" },
 
-			{ IOEvent::Type::MOVE, "Window Moved" },
-			{ IOEvent::Type::CLOSE, "Window Closed" },
-			{ IOEvent::Type::RESIZE, "Window Resized" },
-			{ IOEvent::Type::MINIMIZE, "Window Minimized" },
-			{ IOEvent::Type::FULLSCREEN, "Window Fullscreened" },
+			{ IOEvent::Type::WINDOW_MOVED, "Window Moved" },
+			{ IOEvent::Type::WINDOW_CLOSED, "Window Closed" },
+			{ IOEvent::Type::WINDOW_RESIZED, "Window Resized" },
+			{ IOEvent::Type::WINDOW_MINIMIZED, "Window Minimized" },
+			{ IOEvent::Type::WINDOW_FULLSCREEN, "Window Fullscreened" },
 			{ IOEvent::Type::UNSUPPORTED, "Unsupported Action" }
 		};
 	}
