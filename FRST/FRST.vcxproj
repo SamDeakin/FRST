@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="IOState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="IOEvent.cpp" />
     <ClCompile Include="WindowSystem.cpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="Core.hpp" />
     <ClInclude Include="IOEvent.hpp" />
+    <ClInclude Include="IOState.hpp" />
     <ClInclude Include="WindowSystem.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -49,8 +49,7 @@ Create and destroy a Vulkan surface on an SDL window.
 vk::SurfaceKHR createVulkanSurface(const vk::Instance& instance, SDL_Window* window);
 std::vector<const char*> getAvailableWSIExtensions();
 
-int main()
-{
+int main() {
 #ifdef _WIN32
 #ifdef _DEBUG
 	// Note this connects to another conditional block at the end of main

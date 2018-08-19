@@ -16,14 +16,14 @@ namespace FRST {
 		Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window);
 		
 		// dtors are nothrow
-		~Core();
+		~Core() noexcept;
 
 		// Run the game
 		void run();
 
 	private:
-		WindowSystem ws;
-		std::deque<IOEvent> events;
+		IO::WindowSystem ws;
+		std::deque<IO::IOEvent> events;
 	};
 
 }
