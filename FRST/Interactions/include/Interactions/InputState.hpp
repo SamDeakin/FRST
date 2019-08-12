@@ -3,12 +3,12 @@
 #include <unordered_map>
 #include <vector>
 
-#include "FRST/IO/IOEvent.hpp"
+#include "Interactions/InputEvent.hpp"
 
 
 namespace FRST {
-	namespace IO {
-		class IOState {
+	namespace Interactions {
+		class InputState {
 			/*
 			 * A class that represents the state of the user's input devices during one frame of execution.
 			 * Contains both the current state of IO and changes this frame.
@@ -26,30 +26,30 @@ namespace FRST {
 			 */
 		public:
 			// Construct a new default state with no changes
-			IOState();
+			InputState();
 
 			// Construct a new state by performing changes to other.
 			// The memory created for changes be taken and managed, so it should
 			// not be manually freed after calling.
-			IOState(const IOState& other, const std::vector<IOEvent*>& changes);
+			InputState(const InputState& other, const std::vector<InputEvent*>& changes);
 
-			~IOState();
+			~InputState();
 
 			// Receive a State object representing the most up to date state of the Control
-			const IOEvent* getState(IOEvent::Control ctrl);
+			const InputEvent* getState(InputEvent::Control ctrl);
 
 			// The proper interface to look at changes this frame is to iterate over them
 			// They will appear in the order that they occurred
-			typedef std::vector<IOEvent*>::const_iterator StateChangeIterator;
+			typedef std::vector<InputEvent*>::const_iterator StateChangeIterator;
 			StateChangeIterator changesBegin();
 			StateChangeIterator changesEnd();
 		private:
 			// The changes accumulated over this frame
-			std::vector<IOEvent*> m_changes;
+			std::vector<InputEvent*> m_changes;
 
 			// The current keyboard state as of this frame
 			// Optimized by only containing states that differ from the default
-			std::unordered_map<IOEvent::Control, IOEvent*> m_currentState;
+			std::unordered_map<InputEvent::Control, InputEvent*> m_currentState;
 		};
 	}
 }

@@ -4,7 +4,7 @@
 
 #include <unordered_map>
 
-#include "FRST/IO/IOEvent.hpp"
+#include "Interactions/IOEvent.hpp"
 
 namespace FRST {
 	namespace IO {
