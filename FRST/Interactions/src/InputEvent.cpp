@@ -1,4 +1,4 @@
-#include "FRST/IO/IOEvent.hpp"
+#include "Interactions/InputEvent.hpp"
 
 #include <iostream>
 
@@ -15,7 +15,7 @@ namespace FRST {
 			translateFromSDL(event);
 		}
 
-		IOEvent::IOEvent(Control control) 
+		IOEvent::IOEvent(Control control)
 			: control(control)
 			, x(0)
 			, y(0)

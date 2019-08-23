@@ -1,10 +1,9 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-
+#include "SDL.h"
 #include <queue>
 
-#include "FRST/IO/IOEvent.hpp"
+#include "Interactions/InputEvent.hpp"
 
 
 namespace FRST {

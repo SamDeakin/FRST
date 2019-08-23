@@ -8,15 +8,16 @@ namespace FRST {
 		// We want to expose this type for other files, but without forcing them to import AssetManager.hpp.
 		struct AssetUUID {
 			std::size_t uuid;
-		};
 
-		inline AssetUUID CreateAssetUUID(const std::string& path) {
-			return AssetUUID(std::hash<std::string>()(path));
-		}
+			inline AssetUUID CreateAssetUUID(const std::string& path) {
+				return AssetUUID(std::hash<std::string>()(path));
+			}
+		};
 	}
 }
 
 
+// Some std classes require this to use a struct as a key.
 namespace std {
 	template<>
 	struct hash<FRST::Atlas::AssetUUID> {

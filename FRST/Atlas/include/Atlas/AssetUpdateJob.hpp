@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FRST/WorkForce/Task.hpp>
-#include "FRST/Atlast/AssetManager.hpp"
+#include <WorkForce/Job.hpp>
+#include "Atlas/AssetManager.hpp"
 
 
 namespace FRST {
 	namespace Atlas {
-		class AssetUpdateJob : public WorkForce::Task {
+		class AssetUpdateJob : public WorkForce::Job {
 			/*
 			 * A task to update an asset in some way.
 			 */

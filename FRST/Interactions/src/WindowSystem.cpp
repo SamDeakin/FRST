@@ -1,4 +1,4 @@
-#include "FRST/IO/WindowSystem.hpp"
+#include "Interactions/WindowSystem.hpp"
 
 #include <iostream>
 

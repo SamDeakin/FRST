@@ -26,6 +26,6 @@ namespace FRST {
 					return reinterpret_cast<T>(this);
 				#endif
 			}
-        }
-    }
+		};
+	}
 }

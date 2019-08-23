@@ -2,6 +2,9 @@
 
 #include "WorkForce/JobResult.hpp"
 
+#include <string>
+#include <vector>
+
 namespace FRST {
 	namespace WorkForce {
 		class Job {
@@ -19,8 +22,8 @@ namespace FRST {
 			 *
 			 * This will only be called once, at job queue time. They should not be dependent upon previous frame data.
 			 */
-			virtual const vector<const string>* produces() const = 0;
-			virtual const vector<const string>* consumes() const = 0;
+			virtual const std::vector<const std::string>* produces() const = 0;
+			virtual const std::vector<const std::string>* consumes() const = 0;
 
 			/**
 			 * The work that will be performed per-frame.

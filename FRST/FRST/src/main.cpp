@@ -37,8 +37,8 @@ Create and destroy a Vulkan surface on an SDL window.
 #define SDL_MAIN_HANDLED
 
 #include <glm/glm.hpp>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
 #include <vulkan/vulkan.hpp>
 
 #include <iostream>

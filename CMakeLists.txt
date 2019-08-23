@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
-cmake_policy(VERSION 3.8)
+cmake_policy(VERSION 3.15)
 
 set(NAME FRST)
-project(${NAME})
+project(${NAME} C CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # For additional find modules
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # External libraries are here
-# Defines EXTERNAL_LIBRARIES and EXTERNAL_INCLUDES for linking
 add_subdirectory(external)
 
 # Internal code here

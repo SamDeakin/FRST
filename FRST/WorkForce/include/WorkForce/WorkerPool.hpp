@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WorkForce/JobDependencyTracker.hpp"
+#include "WorkForce/Job.hpp"
 #include <map>
 #include <string>
 #include <vector>
@@ -16,12 +17,12 @@ namespace FRST {
 
 		private:
 			// A map of each consumable string registered to every job that consumes it.
-			map<string, vector<JobDependencyTracker*>> m_consumableMap;
+			std::map<std::string, std::vector<JobDependencyTracker*>> m_consumableMap;
 			// A list of jobs that consume nothing
-			vector<Job*> m_ // TODO: How to best track once the next frame can begin to run?
+			std::vector<Job*> m_ // TODO: How to best track once the next frame can begin to run?
 
 
-			vector<Job*> m_jobs;
+			std::vector<Job*> m_jobs;
 		};
 	}
 }

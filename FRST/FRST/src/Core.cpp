@@ -1,5 +1,5 @@
 #include "FRST/Core.hpp"
-#include "FRST/IO/IOState.hpp"
+#include <Interactions/IOState.hpp>
 
 namespace FRST {
 	Core::Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window)
@@ -9,7 +9,7 @@ namespace FRST {
 
 	Core::~Core() {
 	}
-	
+
 	void Core::run() {
 		m_running = true;
 		int total_events = 0;
@@ -60,4 +60,4 @@ namespace FRST {
 	void Core::quit() {
 		m_running = false;
 	}
-} 
+}

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <FRST/WorkForce/Task.hpp>
-#include "FRST/Atlast/AssetLoadJob.hpp"
+#include <WorkForce/Job.hpp>
+#include "Atlas/AssetUpdateJob.hpp"
 
 
 namespace FRST {

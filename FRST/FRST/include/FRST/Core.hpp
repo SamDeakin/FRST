@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include "SDL.h"
 #include <vulkan/vulkan.hpp>
 
 #include "FRST/IO/ControllerManager.hpp"
@@ -13,7 +13,7 @@ namespace FRST {
 	public:
 		// Throws if there is an issue
 		Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window);
-		
+
 		// dtors are nothrow
 		~Core() noexcept;
 

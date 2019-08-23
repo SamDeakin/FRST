@@ -1,7 +1,7 @@
+#include "Interactions/InputState.hpp"
+
 #include <SDL2/SDL.h>
 #include <tuple>
-
-#include "FRST/IO/IOState.hpp"
 
 
 namespace FRST {
@@ -51,7 +51,7 @@ namespace FRST {
 			for (auto it = m_currentState.begin(); it != m_currentState.end(); it++) {
 				delete it->second;
 			}
-			
+
 			for (auto it = m_changes.begin(); it != m_changes.end(); it++) {
 				delete *it;
 			}
