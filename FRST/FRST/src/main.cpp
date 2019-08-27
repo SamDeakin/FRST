@@ -50,20 +50,6 @@ vk::SurfaceKHR createVulkanSurface(const vk::Instance& instance, SDL_Window* win
 std::vector<const char*> getAvailableWSIExtensions();
 
 int main() {
-#ifdef _WIN32
-#ifdef _DEBUG
-	// Note this connects to another conditional block at the end of main
-	// We need this trash in windows because someone at microsoft decided fuck stderr and stdout
-	AllocConsole();
-	errno_t err1;
-	FILE* f_stdout;
-	errno_t err2;
-	FILE* f_stderr;
-	err1 = freopen_s(&f_stdout, "CONOUT$", "w", stdout);
-	err2 = freopen_s(&f_stderr, "CONOUT$", "w", stderr);
-#endif
-#endif
-
     // Use validation layers if this is a debug build, and use WSI extensions regardless
     std::vector<const char*> extensions = getAvailableWSIExtensions();
     std::vector<const char*> layers;

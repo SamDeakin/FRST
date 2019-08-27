@@ -132,6 +132,12 @@ namespace FRST {
 			case InputEvent::Type::CTRL_AXIS_TRIGGER_RIGHT:
 				y = event.value;
 				break;
+			default:
+				// hmm
+#ifdef _DEBUG2
+				std::cout << "Encountered invallid controller axis type: " << control.type << std::endl;
+#endif
+				break;
 			}
 #ifdef _DEBUG2
 			std::cout << "Controller Axis: " << getTypeString(type) << " " << event.value << std::endl;

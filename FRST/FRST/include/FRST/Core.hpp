@@ -3,9 +3,9 @@
 #include "SDL.h"
 #include <vulkan/vulkan.hpp>
 
-#include "FRST/IO/ControllerManager.hpp"
-#include "FRST/IO/IOEvent.hpp"
-#include "FRST/IO/WindowSystem.hpp"
+#include "Interactions/ControllerManager.hpp"
+#include "Interactions/InputEvent.hpp"
+#include "Interactions/WindowSystem.hpp"
 
 
 namespace FRST {
@@ -27,11 +27,10 @@ namespace FRST {
 		void quit();
 
 	private:
-		IO::WindowSystem m_ws;
-		IO::ControllerManager m_controllerManager;
+		Interactions::WindowSystem m_ws;
+		Interactions::ControllerManager m_controllerManager;
 
 		// Whether the game is currently running
 		bool m_running;
 	};
-
 }

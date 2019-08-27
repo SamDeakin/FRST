@@ -1,5 +1,5 @@
 #include "FRST/Core.hpp"
-#include <Interactions/IOState.hpp>
+#include <Interactions/InputState.hpp>
 
 namespace FRST {
 	Core::Core(vk::Instance* instance, vk::SurfaceKHR* surface, SDL_Window* window)
@@ -7,7 +7,7 @@ namespace FRST {
 		, m_controllerManager() {
 	}
 
-	Core::~Core() {
+	Core::~Core() noexcept {
 	}
 
 	void Core::run() {
@@ -15,10 +15,10 @@ namespace FRST {
 		int total_events = 0;
 
 		// Queues for handling events
-		std::queue<IO::IOEvent*> gameEvents;
-		std::queue<IO::IOEvent*> immediateEvents;
+		std::queue<Interactions::InputEvent*> gameEvents;
+		std::queue<Interactions::InputEvent*> immediateEvents;
 
-		IO::IOState* lastFrameState = new IO::IOState();
+		Interactions::InputState* lastFrameState = new Interactions::InputState();
 
 		while (m_running) {
 
@@ -26,30 +26,30 @@ namespace FRST {
 
 			// Handle immediate events
 			while (!immediateEvents.empty()) {
-				IO::IOEvent* event = immediateEvents.front();
+				Interactions::InputEvent* event = immediateEvents.front();
 				immediateEvents.pop();
 
 				if (event->isControllerModificationEvent()) {
 					m_controllerManager.handleControllerEvent(event);
 				} else if (event->isWindowEvent()) {
 					m_ws.handleWindowEvent(event);
-				} else if (event->control.type == IO::IOEvent::Type::QUIT) {
+				} else if (event->control.type == Interactions::InputEvent::Type::QUIT) {
 					// We quit here on this thread to hopefully exit well when the user asks us to.
 					quit();
 				}
 				delete event;
 			}
 
-			std::vector<IO::IOEvent*> packagedEvents;
+			std::vector<Interactions::InputEvent*> packagedEvents;
 			packagedEvents.reserve(gameEvents.size());
 			while (!gameEvents.empty()) {
-				IO::IOEvent* event = gameEvents.front();
+				Interactions::InputEvent* event = gameEvents.front();
 				gameEvents.pop();
 				packagedEvents.push_back(event);
 			}
 			total_events += num_events;
 
-			IO::IOState* frameState = new IO::IOState(*lastFrameState, packagedEvents);
+			Interactions::InputState* frameState = new Interactions::InputState(*lastFrameState, packagedEvents);
 			delete lastFrameState; // TODO This is a temporary clean up while we do nothing with the state right now.
 			lastFrameState = frameState;
 
