@@ -5,10 +5,10 @@
 
 #include <unordered_map>
 
-#include "Interactions/IOEvent.hpp"
+#include "Interactions/InputEvent.hpp"
 
 namespace FRST {
-	namespace IO {
+	namespace Interactions {
 		class ControllerManager {
 			/*
 			 * An opaque class to manage the connecting and disconnecting of controllers.
@@ -18,12 +18,12 @@ namespace FRST {
 			~ControllerManager();
 
 			// Handle controller modification events like being disconnected/connected.
-			void handleControllerEvent(IOEvent* event);
+			void handleControllerEvent(InputEvent* event);
 		private:
 			void initControllers();
 
 			// Saved joystick id to controller mappings
-			std::unordered_map<IOEvent::Controller, SDL_GameController*> m_controllers;
+			std::unordered_map<InputEvent::Controller, SDL_GameController*> m_controllers;
 		};
 	}
 }

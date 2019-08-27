@@ -7,7 +7,7 @@
 
 
 namespace FRST {
-	namespace IO {
+	namespace Interactions {
 		class WindowSystem {
 		public:
 			WindowSystem(SDL_Window* window);
@@ -25,12 +25,12 @@ namespace FRST {
 			 * returns the number of game events
 			 */
 			int getPendingEvents(
-				std::queue<IOEvent*> &gameEvents,
-				std::queue<IOEvent*> &immediateEvents);
+				std::queue<InputEvent*> &gameEvents,
+				std::queue<InputEvent*> &immediateEvents);
 
 			// These are not handled directly inside getPendingEvents to provide the caller
 			// the chance to schedule their handling at a potentially later time.
-			void handleWindowEvent(IOEvent* event);
+			void handleWindowEvent(InputEvent* event);
 		private:
 			SDL_Window* window;
 		};

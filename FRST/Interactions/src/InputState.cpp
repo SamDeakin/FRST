@@ -5,38 +5,38 @@
 
 
 namespace FRST {
-	namespace IO {
-		IOState::IOState() : m_changes(), m_currentState() {
+	namespace Interactions {
+		InputState::InputState() : m_changes(), m_currentState() {
 		}
 
-		IOState::IOState(const IOState& other, const std::vector<IOEvent*>& changes)
+		InputState::InputState(const InputState& other, const std::vector<InputEvent*>& changes)
 			: m_changes(changes)
 			, m_currentState() {
 
-			// Perform changes on the previous IOState
+			// Perform changes on the previous InputState
 			for (auto it = other.m_currentState.cbegin(); it != other.m_currentState.cend(); it++) {
 				if (!it->second->shouldMoveToNextFrame()) {
 					// Copy it over
 					// We can't steal the pointer because another thread may still be using it
-					IOEvent* event = new IOEvent(*it->second);
+					InputEvent* event = new InputEvent(*it->second);
 					m_currentState[event->control] = event;
 				}
 			}
 
 			// Loop over the changes to edit the current state to match the changes
 			for (auto it = m_changes.begin(); it != m_changes.end(); it++) {
-				IOEvent& change = **it;
+				InputEvent& change = **it;
 				auto search = m_currentState.find(change.control);
 				if (search == m_currentState.end()) {
 					std::tie(search, std::ignore) = m_currentState.insert(
-						std::make_pair(change.control, new IOEvent(change)));
+						std::make_pair(change.control, new InputEvent(change)));
 
 					change.dx = change.x;
 					change.dy = change.y;
 					search->second->dx = change.dx;
 					search->second->dy = change.dy;
 				} else {
-					IOEvent& event = *search->second;
+					InputEvent& event = *search->second;
 					change.dx = event.x - change.x;
 					change.dy = event.y - change.y;
 					event.dx += change.dx;
@@ -47,7 +47,7 @@ namespace FRST {
 			}
 		}
 
-		IOState::~IOState() {
+		InputState::~InputState() {
 			for (auto it = m_currentState.begin(); it != m_currentState.end(); it++) {
 				delete it->second;
 			}
@@ -57,7 +57,7 @@ namespace FRST {
 			}
 		}
 
-		const IOEvent* IOState::getState(IOEvent::Control ctrl) {
+		const InputEvent* InputState::getState(InputEvent::Control ctrl) {
 			auto it = m_currentState.find(ctrl);
 			if (it != m_currentState.end()) {
 				return it->second;
@@ -65,16 +65,16 @@ namespace FRST {
 
 			// Create a default state and add it to the dictionary
 			// We do this for memory management reasons
-			IOEvent* event = new IOEvent(ctrl);
+			InputEvent* event = new InputEvent(ctrl);
 			m_currentState[ctrl] = event;
 			return event;
 		}
 
-		IOState::StateChangeIterator IOState::changesBegin() {
+		InputState::StateChangeIterator InputState::changesBegin() {
 			return m_changes.cbegin();
 		}
 
-		IOState::StateChangeIterator IOState::changesEnd() {
+		InputState::StateChangeIterator InputState::changesEnd() {
 			return m_changes.cend();
 		}
 	}

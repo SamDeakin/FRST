@@ -9,8 +9,8 @@
 
 
 namespace FRST {
-	namespace IO {
-		class IOEvent {
+	namespace Interactions {
+		class InputEvent {
 		public:
 			/*
 			 * This is a general purpose class for handling all types of events.
@@ -24,7 +24,7 @@ namespace FRST {
 			// >= 0 means a controller index
 			typedef int Controller;
 
-			enum Type;
+			enum Type : short;
 
 			static const std::unordered_map<Type, const std::string> TypeLabels;
 			static const std::string& getTypeString(Type type);
@@ -53,12 +53,12 @@ namespace FRST {
 			// Pressed or unpressed for buttons
 			bool active;
 
-			// Create an IOEvent from an SDL_Event
-			IOEvent(SDL_Event* event);
-			// Create a default state IOEvent
-			IOEvent(Control control);
-			// Make a copy of another IOEvent
-			IOEvent(const IOEvent& other);
+			// Create an InputEvent from an SDL_Event
+			InputEvent(SDL_Event* event);
+			// Create a default state InputEvent
+			InputEvent(Control control);
+			// Make a copy of another InputEvent
+			InputEvent(const InputEvent& other);
 
 			// A boolean check for whether this state with no changes should be carried
 			// over to the next frame.
@@ -83,7 +83,7 @@ namespace FRST {
 			void becomeUnsupported(SDL_Event& event);
 
 		public:
-			enum Type {
+			enum Type : short {
 				/*
 				 * All events are enumerated in this way to provide quick determination of which event occurred
 				 */
@@ -290,14 +290,14 @@ namespace FRST {
 // best we can get.
 namespace std {
 	template<>
-	struct hash<FRST::IO::IOEvent::Control> {
-		size_t operator()(const FRST::IO::IOEvent::Control& ctrl) const {
+	struct hash<FRST::Interactions::InputEvent::Control> {
+		size_t operator()(const FRST::Interactions::InputEvent::Control& ctrl) const {
 			// We should reevaluate how well this actually performs at some point in
 			// the future. This is probably good enough for now, and anything more is
 			// a risk that I do something I don't know will cause aliasing or some other
 			// issue. XORing them together is a safe first guess.
-			return hash<FRST::IO::IOEvent::Type>()(ctrl.type)
-				^ hash< FRST::IO::IOEvent::Controller>()(ctrl.controller);
+			return hash<FRST::Interactions::InputEvent::Type>()(ctrl.type)
+				^ hash< FRST::Interactions::InputEvent::Controller>()(ctrl.controller);
 		}
 	};
 }

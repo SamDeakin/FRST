@@ -2,7 +2,7 @@
 
 
 namespace FRST {
-	namespace IO {
+	namespace Interactions {
 		ControllerManager::ControllerManager() {
 			initControllers();
 		}
@@ -28,7 +28,7 @@ namespace FRST {
 			}
 		}
 
-		void ControllerManager::handleControllerEvent(IOEvent* event) {
+		void ControllerManager::handleControllerEvent(InputEvent* event) {
 			// TODO Implement this at some point
 			// Things will probably break if a controller disconnects ever
 		}

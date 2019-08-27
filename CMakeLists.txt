@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
-cmake_policy(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_policy(VERSION 3.10)
 
 set(NAME FRST)
 project(${NAME} C CXX)
